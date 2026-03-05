@@ -1,0 +1,91 @@
+/* ============================================
+   BASE / GLOBAL STYLES
+   ============================================ */
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ---- Custom Cursor ---- */
+.cursor {
+  position: fixed;
+  width: 12px; height: 12px;
+  background: var(--orange);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: left .05s, top .05s, width .2s, height .2s;
+}
+.cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--orange);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: left .12s ease, top .12s ease;
+  opacity: 0.6;
+}
+body.cursor-hover .cursor { width: 20px; height: 20px; background: var(--accent); }
+body.cursor-hover .cursor-ring { width: 50px; height: 50px; opacity: 0.3; }
+
+/* ---- Sections ---- */
+section { padding: var(--section-pad); position: relative; }
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: .8rem;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 5vw, 5rem);
+  line-height: .95;
+  letter-spacing: 1px;
+  margin-bottom: 3rem;
+}
+.divider {
+  width: 60px; height: 3px;
+  background: var(--orange);
+  margin-bottom: 2.5rem;
+}
+
+/* ---- Buttons ---- */
+.btn-primary {
+  background: var(--orange);
+  color: #000;
+  padding: .85rem 2.2rem;
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-block;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  transition: background var(--transition), transform var(--transition);
+}
+.btn-primary:hover { background: #fff; transform: translateY(-2px); }
+
+.btn-ghost {
+  border: 1px solid rgba(245,240,232,.3);
+  color: var(--white);
+  padding: .85rem 2.2rem;
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  transition: border-color var(--transition), color var(--transition), transform var(--transition);
+}
+.btn-ghost:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-2px); }

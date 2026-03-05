@@ -1,0 +1,19 @@
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  nav { padding: 1.2rem 1.5rem; }
+  .nav-links { display: none; }
+  .nav-burger { display: flex; }
+  .hero { grid-template-columns: 1fr; padding: 8rem 1.5rem 4rem; text-align: center; }
+  .hero-desc { margin: 1.5rem auto 0; }
+  .hero-cta { justify-content: center; }
+  .hero-stats { justify-content: center; }
+  .hero-visual { display: none; }
+  section { padding: 5rem 1.5rem; }
+  #clients { padding: 3rem 1.5rem !important; }
+  .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+  footer { padding: 1.5rem; flex-direction: column; text-align: center; }
+}
+@media (max-width: 480px) {
+  .hero-name { font-size: 3.5rem; }
+  .certs-grid { grid-template-columns: 1fr 1fr; }
+}

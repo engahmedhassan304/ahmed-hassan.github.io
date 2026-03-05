@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ahmed Hassan &mdash; IT &amp; Network Engineer</title>
+  <meta name="description" content="Ahmed Hassan - IT & Network Engineer based in Cairo, Egypt. CCNA, MCSA, CompTIA certified."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/reset.css"/>
+  <link rel="stylesheet" href="css/variables.css"/>
+  <link rel="stylesheet" href="css/base.css"/>
+  <link rel="stylesheet" href="css/nav.css"/>
+  <link rel="stylesheet" href="css/hero.css"/>
+  <link rel="stylesheet" href="css/experience.css"/>
+  <link rel="stylesheet" href="css/skills.css"/>
+  <link rel="stylesheet" href="css/certifications.css"/>
+  <link rel="stylesheet" href="css/clients.css"/>
+  <link rel="stylesheet" href="css/contact.css"/>
+  <link rel="stylesheet" href="css/footer.css"/>
+  <link rel="stylesheet" href="css/animations.css"/>
+  <link rel="stylesheet" href="css/responsive.css"/>
+  <style>
+    /* ── Loading skeletons ─────────────────────────── */
+    @keyframes shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+    .skel {
+      background: linear-gradient(90deg, #1a1a1a 25%, #2e2e2e 50%, #1a1a1a 75%);
+      background-size: 800px 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 3px;
+    }
+    .skel-line  { height: 14px; margin-bottom: 10px; }
+    .skel-title { height: 80px; width: 60%; margin-bottom: 16px; }
+    .skel-card  { height: 180px; background: var(--gray); border-left: 3px solid #2e2e2e; padding: 2rem; }
+    .skel-card .skel { margin-bottom: 12px; }
+    .loading-skeleton { opacity: 0.6; }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAVIGATION -->
+  <nav id="navbar">
+    <div class="nav-logo">Ahmed.</div>
+    <ul class="nav-links">
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#certs">Certs</a></li>
+      <li><a href="#clients">Clients</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-burger" id="navBurger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#experience" class="mobile-link">Experience</a></li>
+      <li><a href="#skills" class="mobile-link">Skills</a></li>
+      <li><a href="#certs" class="mobile-link">Certs</a></li>
+      <li><a href="#clients" class="mobile-link">Clients</a></li>
+      <li><a href="#contact" class="mobile-link">Contact</a></li>
+    </ul>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <p class="hero-tag" id="heroTag">// Based in Cairo, Egypt</p>
+      <h1 class="hero-name" id="heroName">AHMED<br/><span>HASSAN</span></h1>
+      <p class="hero-title" id="heroTitle">IT &amp; NETWORK ENGINEER</p>
+      <p class="hero-desc" id="heroDesc">Motivated IT &amp; Network Engineer with hands-on experience managing enterprise infrastructure, configuring network and security systems across multi-branch environments.</p>
+      <div class="hero-cta">
+        <a href="#experience" class="btn-primary">View Work</a>
+        <a href="#contact" class="btn-ghost">Get In Touch</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num" id="statYears">5+</div><div class="stat-label">Years Exp.</div></div>
+        <div class="stat"><div class="stat-num" id="statProjects">20+</div><div class="stat-label">Projects</div></div>
+        <div class="stat"><div class="stat-num" id="statCerts">6</div><div class="stat-label">Certifications</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-badge-wrap">
+        <div class="hero-ring"></div>
+        <div class="hero-ring hero-ring-2"></div>
+        <div class="hero-center-box">
+          <div class="hero-icon">&#127760;</div>
+          <div class="hero-center-label">Network<br/>Engineer</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <p class="section-label">// 01 &mdash; Work History</p>
+    <h2 class="section-title">EXPERIENCE</h2>
+    <div class="divider"></div>
+    <!-- Populated by data-loader.js -->
+    <div class="exp-grid" id="expGrid">
+      <!-- Skeleton loaders -->
+      <div class="exp-card skel-card loading-skeleton"><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:35%"></div><div class="skel skel-line"></div><div class="skel skel-line"></div></div>
+      <div class="exp-card skel-card loading-skeleton"><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:35%"></div><div class="skel skel-line"></div><div class="skel skel-line"></div></div>
+      <div class="exp-card skel-card loading-skeleton"><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:35%"></div><div class="skel skel-line"></div><div class="skel skel-line"></div></div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <p class="section-label">// 02 &mdash; Technical Arsenal</p>
+    <h2 class="section-title">SKILLS</h2>
+    <div class="divider"></div>
+    <!-- Populated by data-loader.js -->
+    <div class="skills-grid" id="skillsGrid">
+      <!-- Skeleton loaders -->
+      <div class="skill-card loading-skeleton"><div class="skel" style="height:32px;width:32px;margin-bottom:12px;border-radius:50%"></div><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:60%"></div></div>
+      <div class="skill-card loading-skeleton"><div class="skel" style="height:32px;width:32px;margin-bottom:12px;border-radius:50%"></div><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:60%"></div></div>
+      <div class="skill-card loading-skeleton"><div class="skel" style="height:32px;width:32px;margin-bottom:12px;border-radius:50%"></div><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:60%"></div></div>
+      <div class="skill-card loading-skeleton"><div class="skel" style="height:32px;width:32px;margin-bottom:12px;border-radius:50%"></div><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:60%"></div></div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section id="certs">
+    <p class="section-label">// 03 &mdash; Credentials</p>
+    <h2 class="section-title">CERTIFICATIONS</h2>
+    <div class="divider"></div>
+    <!-- Populated by data-loader.js -->
+    <div class="certs-grid" id="certsGrid">
+      <div class="cert-card loading-skeleton"><div class="skel skel-line" style="width:70%"></div></div>
+      <div class="cert-card loading-skeleton"><div class="skel skel-line" style="width:70%"></div></div>
+      <div class="cert-card loading-skeleton"><div class="skel skel-line" style="width:70%"></div></div>
+      <div class="cert-card loading-skeleton"><div class="skel skel-line" style="width:70%"></div></div>
+    </div>
+  </section>
+
+  <!-- CLIENTS -->
+  <section id="clients">
+    <p class="section-label" style="text-align:center;margin-bottom:2rem;">// 04 &mdash; Notable Clients</p>
+    <div class="clients-marquee">
+      <!-- Populated by data-loader.js (duplicated for seamless loop) -->
+      <div class="marquee-track" id="marqueeTrack">
+        <span class="client-item loading-skeleton" style="opacity:.3">Loading clients...</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <p class="section-label">// 05 &mdash; Let's Connect</p>
+    <div class="contact-grid">
+      <div class="reveal">
+        <h2 class="contact-big">LET'S<br/><span>BUILD</span><br/>TOGETHER.</h2>
+        <p class="contact-sub">Available for new projects, freelance work, and full-time opportunities in IT &amp; Network Engineering.</p>
+        <div class="lang-badges">
+          <div class="lang-badge" id="langBadge1">Arabic <span>Native</span></div>
+          <div class="lang-badge" id="langBadge2">English <span>Intermediate</span></div>
+        </div>
+      </div>
+      <div class="contact-info reveal">
+        <div class="contact-item"><div class="contact-item-icon">&#128205;</div><div><div class="contact-item-label">Location</div><div class="contact-item-value" id="contactLocation">Cairo, Egypt</div></div></div>
+        <div class="contact-item"><div class="contact-item-icon">&#128241;</div><div><div class="contact-item-label">Phone</div><div class="contact-item-value" id="contactPhone"><a href="tel:+201060735117">+20 106 073 5117</a></div></div></div>
+        <div class="contact-item"><div class="contact-item-icon">&#9993;</div><div><div class="contact-item-label">Email</div><div class="contact-item-value" id="contactEmail"><a href="mailto:engahmedhassan3042030@gmail.com">engahmedhassan3042030@gmail.com</a></div></div></div>
+        <div class="contact-item"><div class="contact-item-icon">&#128188;</div><div><div class="contact-item-label">LinkedIn</div><div class="contact-item-value" id="contactLinkedin"><a href="https://www.linkedin.com/in/ahmedhassan-network" target="_blank">ahmedhassan-network</a></div></div></div>
+        <div class="contact-item"><div class="contact-item-icon">&#127891;</div><div><div class="contact-item-label">Education</div><div class="contact-item-value" id="contactEducation">B.Com Accounting &mdash; Abbassia Institute, Cairo (2025)</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">AH.</div>
+    <div class="footer-copy">&#169; 2025 Ahmed Hassan &mdash; IT &amp; Network Engineer</div>
+    <div class="footer-back"><a href="#home">&#8593; Back to top</a></div>
+  </footer>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <!-- Your credentials -->
+  <script src="js/supabase-config.js"></script>
+  <!-- Fetch & render all content -->
+  <script src="js/data-loader.js"></script>
+  <!-- UI scripts (cursor, nav — don't depend on content) -->
+  <script src="js/cursor.js"></script>
+  <script src="js/navbar.js"></script>
+  <!-- reveal.js & skills.js are now handled by data-loader.js -->
+
+</body>
+</html>

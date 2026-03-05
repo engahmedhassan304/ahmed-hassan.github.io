@@ -1,0 +1,21 @@
+/* HERO */
+.hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: 0 4rem; position: relative; overflow: hidden; background: var(--black); }
+.hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 80% 50%,rgba(255,92,0,.12) 0%,transparent 70%),radial-gradient(ellipse 40% 60% at 10% 80%,rgba(0,212,255,.06) 0%,transparent 60%); z-index: 0; }
+.hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px); background-size: 60px 60px; z-index: 0; }
+.hero-content { position: relative; z-index: 1; }
+.hero-tag { font-family: var(--font-mono); font-size: .7rem; letter-spacing: 4px; text-transform: uppercase; color: var(--orange); margin-bottom: 1.2rem; opacity: 0; animation: fadeUp .8s .2s forwards; }
+.hero-name { font-family: var(--font-display); font-size: clamp(4rem,8vw,8rem); line-height: .9; letter-spacing: 2px; opacity: 0; animation: fadeUp .8s .4s forwards; }
+.hero-name span { color: var(--orange); }
+.hero-title { font-family: var(--font-mono); font-size: .85rem; letter-spacing: 3px; color: var(--accent); margin-top: 1.2rem; opacity: 0; animation: fadeUp .8s .6s forwards; }
+.hero-desc { margin-top: 1.8rem; font-size: 1rem; line-height: 1.7; color: rgba(245,240,232,.65); max-width: 480px; opacity: 0; animation: fadeUp .8s .8s forwards; }
+.hero-cta { display: flex; gap: 1.2rem; margin-top: 2.5rem; opacity: 0; animation: fadeUp .8s 1s forwards; }
+.hero-stats { display: flex; gap: 2rem; margin-top: 3rem; opacity: 0; animation: fadeUp .8s 1.2s forwards; }
+.stat-num { font-family: var(--font-display); font-size: 2.4rem; color: var(--orange); line-height: 1; }
+.stat-label { font-family: var(--font-mono); font-size: .6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gray-light); margin-top: .3rem; }
+.hero-visual { position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; opacity: 0; animation: fadeIn 1.2s .5s forwards; }
+.hero-badge-wrap { position: relative; width: 340px; height: 340px; }
+.hero-ring { position: absolute; inset: 0; border-radius: 50%; border: 1px dashed rgba(255,92,0,.4); animation: spin 20s linear infinite; }
+.hero-ring-2 { inset: 20px; border: 1px dashed rgba(0,212,255,.2); animation: spin 15s linear infinite reverse; }
+.hero-center-box { position: absolute; inset: 50px; background: var(--gray); border: 1px solid var(--gray-mid); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: .6rem; }
+.hero-icon { font-size: 3rem; }
+.hero-center-label { font-family: var(--font-mono); font-size: .6rem; letter-spacing: 3px; text-transform: uppercase; color: var(--orange); text-align: center; }

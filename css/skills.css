@@ -1,0 +1,11 @@
+/* SKILLS */
+#skills { background: var(--black); }
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap: 1.2rem; }
+.skill-card { background: var(--gray); border: 1px solid var(--gray-mid); padding: 1.6rem 1.8rem; transition: border-color .25s, transform .25s; position: relative; overflow: hidden; }
+.skill-card::after { content: ''; position: absolute; bottom: 0; left: 0; height: 2px; width: 0; background: var(--orange); transition: width .4s ease; }
+.skill-card:hover { border-color: var(--orange); transform: translateY(-4px); }
+.skill-card:hover::after { width: 100%; }
+.skill-icon { font-size: 1.8rem; margin-bottom: .7rem; }
+.skill-name { font-family: var(--font-body); font-size: .95rem; font-weight: 700; margin-bottom: .4rem; }
+.skill-bar-wrap { height: 3px; background: var(--gray-mid); margin-top: .8rem; overflow: hidden; }
+.skill-bar { height: 100%; background: linear-gradient(90deg,var(--orange),var(--accent)); width: 0; transition: width 1.2s cubic-bezier(.4,0,.2,1); }

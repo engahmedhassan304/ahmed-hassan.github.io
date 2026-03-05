@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel — Ahmed Hassan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       DESIGN TOKENS
+    ═══════════════════════════════════════════════════════ */
+    :root {
+      --black:      #0a0a0a;
+      --surface:    #111111;
+      --card:       #181818;
+      --border:     #282828;
+      --border-hi:  #3a3a3a;
+      --orange:     #ff5c00;
+      --orange-dim: rgba(255,92,0,.12);
+      --accent:     #00d4ff;
+      --white:      #f5f0e8;
+      --muted:      #666;
+      --success:    #22c55e;
+      --error:      #ef4444;
+      --font-head:  'Bebas Neue', sans-serif;
+      --font-body:  'DM Sans', sans-serif;
+      --font-mono:  'Space Mono', monospace;
+      --sidebar-w:  230px;
+      --header-h:   60px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body { font-family: var(--font-body); background: var(--black); color: var(--white); height: 100vh; overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    button { cursor: pointer; font: inherit; border: none; background: none; }
+    input, textarea, select { font: inherit; }
+
+    /* ── SCROLLBAR ─────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 2px; }
+
+    /* ═══════════════════════════════════════════════════════
+       LOGIN SCREEN
+    ═══════════════════════════════════════════════════════ */
+    #loginScreen {
+      position: fixed; inset: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--black);
+    }
+    .login-wrap {
+      width: 100%; max-width: 400px; padding: 0 1.5rem;
+    }
+    .login-logo {
+      font-family: var(--font-head); font-size: 3rem; letter-spacing: 4px;
+      color: var(--orange); text-align: center; margin-bottom: .5rem;
+    }
+    .login-sub {
+      font-family: var(--font-mono); font-size: .62rem; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--muted); text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .login-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-top: 2px solid var(--orange); padding: 2rem;
+    }
+    .field { margin-bottom: 1.2rem; }
+    .field label {
+      display: block; font-family: var(--font-mono); font-size: .6rem;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+      margin-bottom: .5rem;
+    }
+    .field input, .field textarea, .field select {
+      width: 100%; background: var(--surface); border: 1px solid var(--border);
+      color: var(--white); padding: .65rem .9rem; font-size: .9rem;
+      outline: none; transition: border-color .2s;
+    }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      border-color: var(--orange);
+    }
+    .field textarea { resize: vertical; min-height: 80px; }
+    .field input[type="range"] { padding: 0; background: transparent; border: none; cursor: pointer; }
+    .range-val {
+      font-family: var(--font-mono); font-size: .75rem; color: var(--orange);
+      margin-left: .6rem;
+    }
+    .btn-primary {
+      width: 100%; background: var(--orange); color: #fff; border: none;
+      padding: .75rem; font-family: var(--font-head); font-size: 1.1rem;
+      letter-spacing: 2px; cursor: pointer; transition: background .2s;
+    }
+    .btn-primary:hover { background: #cc4a00; }
+    .btn-primary:disabled { background: #555; cursor: not-allowed; }
+    .login-error {
+      font-family: var(--font-mono); font-size: .7rem; color: var(--error);
+      text-align: center; margin-top: 1rem; min-height: 18px;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       DASHBOARD LAYOUT
+    ═══════════════════════════════════════════════════════ */
+    #dashboard { display: none; height: 100vh; flex-direction: column; }
+    #dashboard.active { display: flex; }
+
+    /* ── HEADER ─────────────────────────────────────────── */
+    .adm-header {
+      height: var(--header-h); min-height: var(--header-h);
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; z-index: 10; gap: 1rem;
+    }
+    .adm-header-logo {
+      font-family: var(--font-head); font-size: 1.4rem; letter-spacing: 3px;
+      color: var(--orange); flex-shrink: 0;
+    }
+    .adm-header-mid {
+      font-family: var(--font-mono); font-size: .6rem; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .adm-header-right { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+    .adm-user {
+      font-family: var(--font-mono); font-size: .65rem; color: var(--muted);
+      max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .btn-logout {
+      font-family: var(--font-mono); font-size: .6rem; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--muted); border: 1px solid var(--border);
+      padding: .35rem .8rem; transition: color .2s, border-color .2s;
+    }
+    .btn-logout:hover { color: var(--orange); border-color: var(--orange); }
+    .btn-preview {
+      font-family: var(--font-mono); font-size: .6rem; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); border: 1px solid rgba(0,212,255,.3);
+      padding: .35rem .8rem; transition: background .2s;
+    }
+    .btn-preview:hover { background: rgba(0,212,255,.08); }
+
+    /* ── BODY: SIDEBAR + MAIN ────────────────────────────── */
+    .adm-body { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── SIDEBAR ─────────────────────────────────────────── */
+    .adm-sidebar {
+      width: var(--sidebar-w); min-width: var(--sidebar-w);
+      background: var(--surface); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow-y: auto;
+    }
+    .sidebar-section-label {
+      font-family: var(--font-mono); font-size: .55rem; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--muted); padding: 1.2rem 1.2rem .5rem;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: .75rem;
+      padding: .7rem 1.2rem; cursor: pointer; border-left: 3px solid transparent;
+      transition: background .15s, border-color .15s; color: var(--muted);
+      font-size: .88rem; font-weight: 500;
+    }
+    .nav-item:hover { background: var(--card); color: var(--white); }
+    .nav-item.active { background: var(--orange-dim); border-left-color: var(--orange); color: var(--white); }
+    .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+    .sidebar-footer { margin-top: auto; padding: 1rem 1.2rem; border-top: 1px solid var(--border); }
+    .sidebar-footer p { font-family: var(--font-mono); font-size: .55rem; color: var(--muted); letter-spacing: 1px; }
+
+    /* ── MAIN CONTENT ────────────────────────────────────── */
+    .adm-main { flex: 1; overflow-y: auto; padding: 2rem 2.5rem; }
+
+    /* ── PAGE HEADER ─────────────────────────────────────── */
+    .page-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8rem; flex-wrap: wrap; gap: 1rem; }
+    .page-title { font-family: var(--font-head); font-size: 2.2rem; letter-spacing: 2px; }
+    .page-subtitle { font-family: var(--font-mono); font-size: .62rem; letter-spacing: 2px; color: var(--muted); margin-top: .3rem; }
+    .btn-add {
+      background: var(--orange); color: #fff; padding: .55rem 1.2rem;
+      font-family: var(--font-mono); font-size: .65rem; letter-spacing: 2px;
+      text-transform: uppercase; transition: background .2s; flex-shrink: 0;
+    }
+    .btn-add:hover { background: #cc4a00; }
+
+    /* ── DATA TABLE ──────────────────────────────────────── */
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th {
+      font-family: var(--font-mono); font-size: .58rem; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--muted); text-align: left;
+      padding: .6rem 1rem; border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    .data-table td {
+      padding: .9rem 1rem; border-bottom: 1px solid var(--border);
+      font-size: .88rem; vertical-align: top;
+    }
+    .data-table tr:hover td { background: rgba(255,255,255,.02); }
+    .data-table .col-icon { width: 50px; font-size: 1.2rem; }
+    .data-table .col-level { font-family: var(--font-mono); font-size: .75rem; color: var(--orange); }
+    .data-table .col-actions { width: 120px; white-space: nowrap; }
+    .data-table .col-order { width: 60px; font-family: var(--font-mono); font-size: .7rem; color: var(--muted); }
+    .tag-pill {
+      display: inline-block; font-family: var(--font-mono); font-size: .58rem;
+      letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
+      border: 1px solid var(--border); padding: .15rem .5rem; margin: .1rem .1rem .1rem 0;
+    }
+    .action-btn {
+      font-family: var(--font-mono); font-size: .6rem; letter-spacing: 1px;
+      text-transform: uppercase; padding: .3rem .7rem; margin-right: .4rem;
+      border: 1px solid; transition: background .15s;
+    }
+    .action-btn.edit  { color: var(--accent); border-color: rgba(0,212,255,.3); }
+    .action-btn.edit:hover  { background: rgba(0,212,255,.08); }
+    .action-btn.del   { color: var(--error); border-color: rgba(239,68,68,.3); }
+    .action-btn.del:hover   { background: rgba(239,68,68,.08); }
+
+    /* ── FORM CARD (for Hero + Contact single-row) ────────── */
+    .form-card { background: var(--card); border: 1px solid var(--border); border-top: 2px solid var(--orange); padding: 2rem; max-width: 720px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-row.full { grid-template-columns: 1fr; }
+    .form-actions { display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; }
+    .btn-save {
+      background: var(--orange); color: #fff; padding: .6rem 1.5rem;
+      font-family: var(--font-mono); font-size: .65rem; letter-spacing: 2px;
+      text-transform: uppercase; transition: background .2s;
+    }
+    .btn-save:hover { background: #cc4a00; }
+    .save-status { font-family: var(--font-mono); font-size: .65rem; }
+    .save-status.ok  { color: var(--success); }
+    .save-status.err { color: var(--error); }
+
+    /* ── EMPTY STATE ─────────────────────────────────────── */
+    .empty-state {
+      text-align: center; padding: 4rem 2rem; color: var(--muted);
+    }
+    .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .empty-state p { font-family: var(--font-mono); font-size: .7rem; letter-spacing: 1px; }
+
+    /* ── LOADING INDICATOR ───────────────────────────────── */
+    .loading-row td { padding: 2rem; text-align: center; color: var(--muted); font-family: var(--font-mono); font-size: .7rem; letter-spacing: 2px; }
+
+    /* ═══════════════════════════════════════════════════════
+       MODAL
+    ═══════════════════════════════════════════════════════ */
+    #modalOverlay {
+      display: none; position: fixed; inset: 0; z-index: 300;
+      background: rgba(0,0,0,.75); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center;
+    }
+    #modalOverlay.open { display: flex; }
+    .modal-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-top: 2px solid var(--orange); width: 100%; max-width: 560px;
+      max-height: 90vh; overflow-y: auto; padding: 2rem;
+      animation: slideUp .2s ease;
+    }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .modal-title { font-family: var(--font-head); font-size: 1.6rem; letter-spacing: 2px; }
+    .modal-close { color: var(--muted); font-size: 1.4rem; transition: color .2s; }
+    .modal-close:hover { color: var(--white); }
+    .modal-actions { display: flex; gap: .8rem; margin-top: 1.5rem; }
+    .btn-cancel {
+      background: transparent; color: var(--muted); border: 1px solid var(--border);
+      padding: .6rem 1.2rem; font-family: var(--font-mono); font-size: .65rem;
+      letter-spacing: 2px; text-transform: uppercase; transition: color .2s, border-color .2s;
+    }
+    .btn-cancel:hover { color: var(--white); border-color: var(--border-hi); }
+
+    /* ═══════════════════════════════════════════════════════
+       TOAST
+    ═══════════════════════════════════════════════════════ */
+    #toast {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 500;
+      font-family: var(--font-mono); font-size: .65rem; letter-spacing: 1.5px;
+      padding: .7rem 1.2rem; border-left: 3px solid; opacity: 0;
+      transform: translateY(10px); transition: opacity .25s, transform .25s;
+      pointer-events: none;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+    #toast.ok  { background: rgba(34,197,94,.12); border-color: var(--success); color: var(--success); }
+    #toast.err { background: rgba(239,68,68,.12);  border-color: var(--error);  color: var(--error); }
+
+    /* ═══════════════════════════════════════════════════════
+       SKILL LEVEL BAR (admin preview)
+    ═══════════════════════════════════════════════════════ */
+    .level-bar-wrap { height: 3px; background: var(--border); width: 80px; display: inline-block; vertical-align: middle; margin-left: .5rem; }
+    .level-bar { height: 100%; background: linear-gradient(90deg,var(--orange),var(--accent)); }
+
+    /* ── Responsive sidebar ───────────────────────────────── */
+    @media (max-width: 700px) {
+      .adm-sidebar { display: none; }
+      .adm-main { padding: 1.2rem; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     LOGIN SCREEN
+════════════════════════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-wrap">
+    <div class="login-logo">AHMED.</div>
+    <p class="login-sub">// Admin Panel</p>
+    <div class="login-card">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="admin@example.com" autocomplete="username"/>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password"/>
+      </div>
+      <button class="btn-primary" id="loginBtn" onclick="login()">SIGN IN</button>
+      <p class="login-error" id="loginError"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     DASHBOARD
+════════════════════════════════════════════════════════════ -->
+<div id="dashboard">
+
+  <!-- Header -->
+  <header class="adm-header">
+    <span class="adm-header-logo">AHMED. ADMIN</span>
+    <span class="adm-header-mid">Portfolio Control Panel</span>
+    <div class="adm-header-right">
+      <span class="adm-user" id="adminUserEmail"></span>
+      <button class="btn-preview" onclick="window.open('index.html','_blank')">↗ Preview Site</button>
+      <button class="btn-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </header>
+
+  <div class="adm-body">
+
+    <!-- Sidebar -->
+    <aside class="adm-sidebar">
+      <p class="sidebar-section-label">Sections</p>
+      <div class="nav-item active" onclick="switchSection('hero')"><span class="nav-icon">🏠</span> Hero</div>
+      <div class="nav-item" onclick="switchSection('experience')"><span class="nav-icon">💼</span> Experience</div>
+      <div class="nav-item" onclick="switchSection('skills')"><span class="nav-icon">⚡</span> Skills</div>
+      <div class="nav-item" onclick="switchSection('certifications')"><span class="nav-icon">🎓</span> Certifications</div>
+      <div class="nav-item" onclick="switchSection('clients')"><span class="nav-icon">👥</span> Clients</div>
+      <div class="nav-item" onclick="switchSection('contact')"><span class="nav-icon">📞</span> Contact</div>
+      <div class="sidebar-footer">
+        <p>Changes go live instantly on your portfolio.</p>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="adm-main" id="mainContent">
+      <!-- Rendered by JS -->
+    </main>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODAL
+════════════════════════════════════════════════════════════ -->
+<div id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalTitle">Edit Item</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modalBody"></div>
+    <div class="modal-actions">
+      <button class="btn-save" id="modalSaveBtn" onclick="modalSave()">SAVE</button>
+      <button class="btn-cancel" onclick="closeModal()">CANCEL</button>
+      <span class="save-status" id="modalStatus"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SUPABASE + APP LOGIC
+════════════════════════════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supabase-config.js"></script>
+<script>
+/* ─── Init ────────────────────────────────────────────────── */
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let activeSection  = 'hero';
+let modalSaveFn    = null;
+let currentUser    = null;
+
+/* ─── AUTH ────────────────────────────────────────────────── */
+async function login() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPassword').value;
+  const btn   = document.getElementById('loginBtn');
+  const err   = document.getElementById('loginError');
+  err.textContent = '';
+  btn.textContent = 'SIGNING IN…'; btn.disabled = true;
+  const { data, error } = await db.auth.signInWithPassword({ email, password: pass });
+  btn.textContent = 'SIGN IN'; btn.disabled = false;
+  if (error) { err.textContent = error.message; return; }
+  showDashboard(data.user);
+}
+document.getElementById('loginPassword').addEventListener('keydown', e => {
+  if (e.key === 'Enter') login();
+});
+
+async function logout() {
+  await db.auth.signOut();
+  document.getElementById('dashboard').classList.remove('active');
+  document.getElementById('loginScreen').style.display = 'flex';
+  currentUser = null;
+}
+
+function showDashboard(user) {
+  currentUser = user;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('dashboard').classList.add('active');
+  document.getElementById('adminUserEmail').textContent = user.email;
+  switchSection('hero');
+}
+
+// Auto-restore session
+(async () => {
+  const { data } = await db.auth.getSession();
+  if (data.session?.user) showDashboard(data.session.user);
+})();
+
+/* ─── NAVIGATION ──────────────────────────────────────────── */
+function switchSection(name) {
+  activeSection = name;
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el => {
+    if (el.textContent.trim().toLowerCase().includes(name.toLowerCase().split('_')[0])) {
+      el.classList.add('active');
+    }
+  });
+  const renders = {
+    hero:           renderHeroPage,
+    experience:     renderExperiencePage,
+    skills:         renderSkillsPage,
+    certifications: renderCertsPage,
+    clients:        renderClientsPage,
+    contact:        renderContactPage,
+  };
+  (renders[name] || renderHeroPage)();
+}
+
+/* ─── TOAST ───────────────────────────────────────────────── */
+function showToast(msg, type = 'ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.className = ''; }, 3000);
+}
+
+/* ─── MODAL ───────────────────────────────────────────────── */
+function openModal(title, bodyHTML, saveFn) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = bodyHTML;
+  document.getElementById('modalStatus').textContent = '';
+  document.getElementById('modalOverlay').classList.add('open');
+  modalSaveFn = saveFn;
+  // Wire range inputs
+  document.querySelectorAll('#modalBody input[type=range]').forEach(r => {
+    const display = document.getElementById(r.id + 'Val');
+    if (display) display.textContent = r.value;
+    r.oninput = () => { if (display) display.textContent = r.value; };
+  });
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+function closeModalOnBg(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
+async function modalSave() {
+  if (!modalSaveFn) return;
+  const btn = document.getElementById('modalSaveBtn');
+  const st  = document.getElementById('modalStatus');
+  btn.disabled = true; btn.textContent = 'SAVING…'; st.textContent = '';
+  try {
+    await modalSaveFn();
+    closeModal(); showToast('✓ Saved successfully');
+  } catch(e) {
+    st.className = 'save-status err'; st.textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'SAVE';
+  }
+}
+
+/* ─── SHARED HELPERS ──────────────────────────────────────── */
+function val(id)  { return document.getElementById(id)?.value?.trim() || ''; }
+function setMain(html) { document.getElementById('mainContent').innerHTML = html; }
+
+function pageHead(title, subtitle, addLabel, addFn) {
+  return `<div class="page-head">
+    <div>
+      <h1 class="page-title">${title}</h1>
+      <p class="page-subtitle">${subtitle}</p>
+    </div>
+    ${addLabel ? `<button class="btn-add" onclick="${addFn}()">+ ${addLabel}</button>` : ''}
+  </div>`;
+}
+
+function bulletsToText(arr) { return (arr || []).join('\n'); }
+function textToBullets(str) { return str.split('\n').map(s => s.trim()).filter(Boolean); }
+function tagsToText(arr)    { return (arr || []).join(', '); }
+function textToTags(str)    { return str.split(',').map(s => s.trim()).filter(Boolean); }
+
+/* ══════════════════════════════════════════════════════════
+   ── HERO SECTION ─────────────────────────────────────────
+═══════════════════════════════════════════════════════════ */
+async function renderHeroPage() {
+  setMain(`<div class="empty-state"><p>LOADING…</p></div>`);
+  const { data, error } = await db.from('hero').select('*').single();
+  if (error) { setMain(`<p style="color:var(--error)">${error.message}</p>`); return; }
+  const h = data || {};
+  setMain(`
+    ${pageHead('HERO', '// Main section — name, title, stats', '', '')}
+    <div class="form-card">
+      <div class="form-row">
+        <div class="field"><label>Tag Line</label><input id="hTag" value="${esc(h.tag)}"/></div>
+        <div class="field"><label>Title / Role</label><input id="hTitle" value="${esc(h.title)}"/></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Name — Line 1</label><input id="hName1" value="${esc(h.name_line1)}"/></div>
+        <div class="field"><label>Name — Line 2</label><input id="hName2" value="${esc(h.name_line2)}"/></div>
+      </div>
+      <div class="form-row full">
+        <div class="field"><label>Hero Description</label><textarea id="hDesc" rows="4">${esc(h.description)}</textarea></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Stat — Years Exp.</label><input id="hYears" value="${esc(h.stat_years)}"/></div>
+        <div class="field"><label>Stat — Projects</label><input id="hProjects" value="${esc(h.stat_projects)}"/></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Stat — Certifications</label><input id="hCerts" value="${esc(h.stat_certs)}"/></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-save" onclick="saveHero('${h.id}')">SAVE CHANGES</button>
+        <span class="save-status" id="heroStatus"></span>
+      </div>
+    </div>
+  `);
+}
+
+async function saveHero(id) {
+  const btn = document.querySelector('.btn-save');
+  const st  = document.getElementById('heroStatus');
+  btn.disabled = true; btn.textContent = 'SAVING…';
+  const { error } = await db.from('hero').update({
+    tag: val('hTag'), title: val('hTitle'),
+    name_line1: val('hName1'), name_line2: val('hName2'),
+    description: val('hDesc'),
+    stat_years: val('hYears'), stat_projects: val('hProjects'), stat_certs: val('hCerts'),
+    updated_at: new Date().toISOString(),
+  }).eq('id', id);
+  btn.disabled = false; btn.textContent = 'SAVE CHANGES';
+  if (error) { st.className = 'save-status err'; st.textContent = error.message; }
+  else { st.className = 'save-status ok'; st.textContent = '✓ Saved!'; showToast('✓ Hero updated'); }
+}
+
+/* ══════════════════════════════════════════════════════════
+   ── EXPERIENCE SECTION ───────────────────────────────────
+═══════════════════════════════════════════════════════════ */
+async function renderExperiencePage() {
+  setMain(`${pageHead('EXPERIENCE', '// Work history cards', 'Add Position', 'openAddExp')}<table class="data-table"><thead><tr><th>Role</th><th>Company</th><th>Period</th><th>Tags</th><th class="col-order">#</th><th class="col-actions">Actions</th></tr></thead><tbody><tr class="loading-row"><td colspan="6">LOADING…</td></tr></tbody></table>`);
+  const { data, error } = await db.from('experience').select('*').order('sort_order');
+  if (error) { setMain(`<p style="color:var(--error)">${error.message}</p>`); return; }
+  const tbody = data.length ? data.map(e => `
+    <tr>
+      <td><strong>${esc(e.role)}</strong></td>
+      <td style="color:var(--muted);font-size:.82rem">${esc(e.company)}</td>
+      <td style="font-family:var(--font-mono);font-size:.7rem;color:var(--accent)">${esc(e.period)}</td>
+      <td>${(e.tags||[]).map(t=>`<span class="tag-pill">${esc(t)}</span>`).join('')}</td>
+      <td class="col-order">${e.sort_order}</td>
+      <td class="col-actions">
+        <button class="action-btn edit" onclick="openEditExp('${e.id}')">Edit</button>
+        <button class="action-btn del"  onclick="deleteRecord('experience','${e.id}',renderExperiencePage)">Del</button>
+      </td>
+    </tr>
+  `).join('') : `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted);font-family:var(--font-mono);font-size:.7rem">No experience records yet.</td></tr>`;
+
+  document.querySelector('.data-table tbody').innerHTML = tbody;
+}
+
+function expForm(e = {}) {
+  return `
+    <div class="field"><label>Role / Position</label><input id="eRole" value="${esc(e.role)}"/></div>
+    <div class="field"><label>Period</label><input id="ePeriod" value="${esc(e.period)}" placeholder="Jan 2022 — Dec 2023"/></div>
+    <div class="field"><label>Company</label><input id="eCompany" value="${esc(e.company)}"/></div>
+    <div class="field"><label>Bullet Points <small style="color:var(--muted)">(one per line)</small></label><textarea id="eBullets" rows="5">${esc(bulletsToText(e.bullets))}</textarea></div>
+    <div class="field"><label>Tags <small style="color:var(--muted)">(comma separated)</small></label><input id="eTags" value="${esc(tagsToText(e.tags))}"/></div>
+    <div class="field"><label>Sort Order</label><input id="eOrder" type="number" value="${e.sort_order ?? 0}"/></div>
+  `;
+}
+
+function openAddExp() {
+  openModal('ADD EXPERIENCE', expForm(), async () => {
+    const { error } = await db.from('experience').insert({
+      role: val('eRole'), period: val('ePeriod'), company: val('eCompany'),
+      bullets: textToBullets(val('eBullets')), tags: textToTags(val('eTags')),
+      sort_order: parseInt(val('eOrder')) || 0,
+    });
+    if (error) throw error;
+    renderExperiencePage();
+  });
+}
+
+async function openEditExp(id) {
+  const { data } = await db.from('experience').select('*').eq('id', id).single();
+  openModal('EDIT EXPERIENCE', expForm(data || {}), async () => {
+    const { error } = await db.from('experience').update({
+      role: val('eRole'), period: val('ePeriod'), company: val('eCompany'),
+      bullets: textToBullets(val('eBullets')), tags: textToTags(val('eTags')),
+      sort_order: parseInt(val('eOrder')) || 0,
+    }).eq('id', id);
+    if (error) throw error;
+    renderExperiencePage();
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   ── SKILLS SECTION ───────────────────────────────────────
+═══════════════════════════════════════════════════════════ */
+async function renderSkillsPage() {
+  setMain(`${pageHead('SKILLS', '// Technical skill cards with progress bars', 'Add Skill', 'openAddSkill')}<table class="data-table"><thead><tr><th class="col-icon">Icon</th><th>Skill</th><th>Level</th><th class="col-order">#</th><th class="col-actions">Actions</th></tr></thead><tbody><tr class="loading-row"><td colspan="5">LOADING…</td></tr></tbody></table>`);
+  const { data, error } = await db.from('skills').select('*').order('sort_order');
+  if (error) { setMain(`<p style="color:var(--error)">${error.message}</p>`); return; }
+  const tbody = data.length ? data.map(s => `
+    <tr>
+      <td class="col-icon">${esc(s.icon)}</td>
+      <td><strong>${esc(s.name)}</strong></td>
+      <td class="col-level">${s.level}% <span class="level-bar-wrap"><span class="level-bar" style="width:${s.level}%"></span></span></td>
+      <td class="col-order">${s.sort_order}</td>
+      <td class="col-actions">
+        <button class="action-btn edit" onclick="openEditSkill('${s.id}')">Edit</button>
+        <button class="action-btn del"  onclick="deleteRecord('skills','${s.id}',renderSkillsPage)">Del</button>
+      </td>
+    </tr>
+  `).join('') : `<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted);font-family:var(--font-mono);font-size:.7rem">No skills yet.</td></tr>`;
+  document.querySelector('.data-table tbody').innerHTML = tbody;
+}
+
+function skillForm(s = {}) {
+  const lvl = s.level ?? 80;
+  return `
+    <div class="field"><label>Icon (emoji)</label><input id="sIcon" value="${esc(s.icon || '🔧')}" style="font-size:1.4rem;width:80px"/></div>
+    <div class="field"><label>Skill Name</label><input id="sName" value="${esc(s.name)}"/></div>
+    <div class="field"><label>Level: <span id="sLevelVal" class="range-val">${lvl}</span>%</label><input id="sLevel" type="range" min="0" max="100" value="${lvl}" id="sLevel"/></div>
+    <div class="field"><label>Sort Order</label><input id="sOrder" type="number" value="${s.sort_order ?? 0}"/></div>
+  `;
+}
+
+function openAddSkill() {
+  openModal('ADD SKILL', skillForm(), async () => {
+    const { error } = await db.from('skills').insert({
+      icon: val('sIcon'), name: val('sName'),
+      level: parseInt(document.getElementById('sLevel').value),
+      sort_order: parseInt(val('sOrder')) || 0,
+    });
+    if (error) throw error;
+    renderSkillsPage();
+  });
+}
+
+async function openEditSkill(id) {
+  const { data } = await db.from('skills').select('*').eq('id', id).single();
+  openModal('EDIT SKILL', skillForm(data || {}), async () => {
+    const { error } = await db.from('skills').update({
+      icon: val('sIcon'), name: val('sName'),
+      level: parseInt(document.getElementById('sLevel').value),
+      sort_order: parseInt(val('sOrder')) || 0,
+    }).eq('id', id);
+    if (error) throw error;
+    renderSkillsPage();
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   ── CERTIFICATIONS SECTION ───────────────────────────────
+═══════════════════════════════════════════════════════════ */
+async function renderCertsPage() {
+  setMain(`${pageHead('CERTIFICATIONS', '// Credential cards', 'Add Certification', 'openAddCert')}<table class="data-table"><thead><tr><th class="col-icon">Icon</th><th>Certification</th><th class="col-order">#</th><th class="col-actions">Actions</th></tr></thead><tbody><tr class="loading-row"><td colspan="4">LOADING…</td></tr></tbody></table>`);
+  const { data, error } = await db.from('certifications').select('*').order('sort_order');
+  if (error) { setMain(`<p style="color:var(--error)">${error.message}</p>`); return; }
+  const tbody = data.length ? data.map(c => `
+    <tr>
+      <td class="col-icon">${esc(c.icon)}</td>
+      <td><strong>${esc(c.name)}</strong></td>
+      <td class="col-order">${c.sort_order}</td>
+      <td class="col-actions">
+        <button class="action-btn edit" onclick="openEditCert('${c.id}')">Edit</button>
+        <button class="action-btn del"  onclick="deleteRecord('certifications','${c.id}',renderCertsPage)">Del</button>
+      </td>
+    </tr>
+  `).join('') : `<tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--muted);font-family:var(--font-mono);font-size:.7rem">No certifications yet.</td></tr>`;
+  document.querySelector('.data-table tbody').innerHTML = tbody;
+}
+
+function certForm(c = {}) {
+  return `
+    <div class="field"><label>Icon (emoji)</label><input id="cIcon" value="${esc(c.icon || '🎆')}" style="font-size:1.4rem;width:80px"/></div>
+    <div class="field"><label>Certification Name</label><input id="cName" value="${esc(c.name)}"/></div>
+    <div class="field"><label>Sort Order</label><input id="cOrder" type="number" value="${c.sort_order ?? 0}"/></div>
+  `;
+}
+
+function openAddCert() {
+  openModal('ADD CERTIFICATION', certForm(), async () => {
+    const { error } = await db.from('certifications').insert({
+      icon: val('cIcon'), name: val('cName'),
+      sort_order: parseInt(val('cOrder')) || 0,
+    });
+    if (error) throw error;
+    renderCertsPage();
+  });
+}
+
+async function openEditCert(id) {
+  const { data } = await db.from('certifications').select('*').eq('id', id).single();
+  openModal('EDIT CERTIFICATION', certForm(data || {}), async () => {
+    const { error } = await db.from('certifications').update({
+      icon: val('cIcon'), name: val('cName'),
+      sort_order: parseInt(val('cOrder')) || 0,
+    }).eq('id', id);
+    if (error) throw error;
+    renderCertsPage();
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   ── CLIENTS SECTION ──────────────────────────────────────
+═══════════════════════════════════════════════════════════ */
+async function renderClientsPage() {
+  setMain(`${pageHead('CLIENTS', '// Scrolling marquee clients', 'Add Client', 'openAddClient')}<table class="data-table"><thead><tr><th>Client Name</th><th class="col-order">#</th><th class="col-actions">Actions</th></tr></thead><tbody><tr class="loading-row"><td colspan="3">LOADING…</td></tr></tbody></table>`);
+  const { data, error } = await db.from('clients').select('*').order('sort_order');
+  if (error) { setMain(`<p style="color:var(--error)">${error.message}</p>`); return; }
+  const tbody = data.length ? data.map(c => `
+    <tr>
+      <td><strong>${esc(c.name)}</strong></td>
+      <td class="col-order">${c.sort_order}</td>
+      <td class="col-actions">
+        <button class="action-btn edit" onclick="openEditClient('${c.id}')">Edit</button>
+        <button class="action-btn del"  onclick="deleteRecord('clients','${c.id}',renderClientsPage)">Del</button>
+      </td>
+    </tr>
+  `).join('') : `<tr><td colspan="3" style="text-align:center;padding:2rem;color:var(--muted);font-family:var(--font-mono);font-size:.7rem">No clients yet.</td></tr>`;
+  document.querySelector('.data-table tbody').innerHTML = tbody;
+}
+
+function clientForm(c = {}) {
+  return `
+    <div class="field"><label>Client Name (uppercase recommended)</label><input id="clName" value="${esc(c.name)}"/></div>
+    <div class="field"><label>Sort Order</label><input id="clOrder" type="number" value="${c.sort_order ?? 0}"/></div>
+  `;
+}
+
+function openAddClient() {
+  openModal('ADD CLIENT', clientForm(), async () => {
+    const { error } = await db.from('clients').insert({
+      name: val('clName'), sort_order: parseInt(val('clOrder')) || 0,
+    });
+    if (error) throw error;
+    renderClientsPage();
+  });
+}
+
+async function openEditClient(id) {
+  const { data } = await db.from('clients').select('*').eq('id', id).single();
+  openModal('EDIT CLIENT', clientForm(data || {}), async () => {
+    const { error } = await db.from('clients').update({
+      name: val('clName'), sort_order: parseInt(val('clOrder')) || 0,
+    }).eq('id', id);
+    if (error) throw error;
+    renderClientsPage();
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   ── CONTACT SECTION ──────────────────────────────────────
+═══════════════════════════════════════════════════════════ */
+async function renderContactPage() {
+  setMain(`<div class="empty-state"><p>LOADING…</p></div>`);
+  const { data, error } = await db.from('contact').select('*').single();
+  if (error) { setMain(`<p style="color:var(--error)">${error.message}</p>`); return; }
+  const c = data || {};
+  setMain(`
+    ${pageHead('CONTACT', '// Contact info & languages', '', '')}
+    <div class="form-card">
+      <div class="form-row">
+        <div class="field"><label>Location</label><input id="ctLoc"   value="${esc(c.location)}"/></div>
+        <div class="field"><label>Phone</label><input id="ctPhone"    value="${esc(c.phone)}"/></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Email</label><input id="ctEmail"    value="${esc(c.email)}"/></div>
+        <div class="field"><label>LinkedIn Handle</label><input id="ctLinkedin" value="${esc(c.linkedin)}"/></div>
+      </div>
+      <div class="form-row full">
+        <div class="field"><label>Education</label><input id="ctEdu"  value="${esc(c.education)}"/></div>
+      </div>
+      <p class="sidebar-section-label" style="padding:1.2rem 0 .5rem;font-size:.58rem">Languages</p>
+      <div class="form-row">
+        <div class="field"><label>Language 1</label><input id="ctL1"     value="${esc(c.lang1)}"/></div>
+        <div class="field"><label>Level</label><input id="ctL1Lv"        value="${esc(c.lang1_level)}"/></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Language 2</label><input id="ctL2"     value="${esc(c.lang2)}"/></div>
+        <div class="field"><label>Level</label><input id="ctL2Lv"        value="${esc(c.lang2_level)}"/></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-save" onclick="saveContact('${c.id}')">SAVE CHANGES</button>
+        <span class="save-status" id="contactStatus"></span>
+      </div>
+    </div>
+  `);
+}
+
+async function saveContact(id) {
+  const btn = document.querySelector('.btn-save');
+  const st  = document.getElementById('contactStatus');
+  btn.disabled = true; btn.textContent = 'SAVING…';
+  const { error } = await db.from('contact').update({
+    location:   val('ctLoc'),  phone: val('ctPhone'),
+    email:      val('ctEmail'), linkedin: val('ctLinkedin'),
+    education:  val('ctEdu'),
+    lang1:      val('ctL1'),   lang1_level: val('ctL1Lv'),
+    lang2:      val('ctL2'),   lang2_level: val('ctL2Lv'),
+    updated_at: new Date().toISOString(),
+  }).eq('id', id);
+  btn.disabled = false; btn.textContent = 'SAVE CHANGES';
+  if (error) { st.className = 'save-status err'; st.textContent = error.message; }
+  else { st.className = 'save-status ok'; st.textContent = '✓ Saved!'; showToast('✓ Contact updated'); }
+}
+
+/* ─── GENERIC DELETE ──────────────────────────────────────── */
+async function deleteRecord(table, id, refreshFn) {
+  if (!confirm('Delete this record? This cannot be undone.')) return;
+  const { error } = await db.from(table).delete().eq('id', id);
+  if (error) { showToast('✗ ' + error.message, 'err'); return; }
+  showToast('✓ Deleted'); refreshFn();
+}
+
+/* ─── ESCAPE HTML ─────────────────────────────────────────── */
+function esc(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+</script>
+</body>
+</html>

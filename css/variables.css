@@ -1,0 +1,27 @@
+/* ============================================
+   CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+   ============================================ */
+:root {
+  /* Colors */
+  --black:        #0a0a0a;
+  --white:        #f5f0e8;
+  --orange:       #ff5c00;
+  --orange-dim:   #c44400;
+  --gray:         #1a1a1a;
+  --gray-mid:     #2e2e2e;
+  --gray-light:   #666;
+  --accent:       #00d4ff;
+
+  /* Fonts */
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'Space Mono', monospace;
+
+  /* Layout */
+  --section-pad:  7rem 4rem;
+  --nav-height:   72px;
+
+  /* Motion */
+  --transition:      0.25s ease;
+  --transition-slow: 0.7s ease;
+}

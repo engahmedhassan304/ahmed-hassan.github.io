@@ -1,0 +1,6 @@
+/* FOOTER */
+footer { background: var(--black); border-top: 1px solid var(--gray-mid); padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.footer-logo { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: 3px; color: var(--orange); }
+.footer-copy { font-family: var(--font-mono); font-size: .62rem; letter-spacing: 1.5px; color: var(--gray-light); }
+.footer-back a { font-family: var(--font-mono); font-size: .62rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gray-light); text-decoration: none; transition: color .2s; }
+.footer-back a:hover { color: var(--orange); }
