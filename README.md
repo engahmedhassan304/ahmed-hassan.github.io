@@ -78,7 +78,7 @@ Open `admin.html` to manage content.
 | **Skills**    | Add / Edit / Delete / Set level (0–100)           |
 | **Certifications** | Add / Edit / Delete credential cards        |
 | **Clients**   | Add / Edit / Delete marquee clients               |
-| **Contact**   | Edit location, phone, email, LinkedIn, education  |
+| **Contact**   | Edit location, phone, WatsApp, email, LinkedIn, education  |
 
 Changes go live immediately on `index.html` — no rebuild needed.
 
