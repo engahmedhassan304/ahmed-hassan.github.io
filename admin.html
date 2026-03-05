@@ -786,6 +786,7 @@ async function renderContactPage() {
       <div class="form-row">
         <div class="field"><label>Location</label><input id="ctLoc"   value="${esc(c.location)}"/></div>
         <div class="field"><label>Phone</label><input id="ctPhone"    value="${esc(c.phone)}"/></div>
+        <div class="field"><label>WatsApp</label><input id="ctWatsApp"    value="${esc(c.WatsApp)}"/></div>
       </div>
       <div class="form-row">
         <div class="field"><label>Email</label><input id="ctEmail"    value="${esc(c.email)}"/></div>
@@ -817,6 +818,7 @@ async function saveContact(id) {
   btn.disabled = true; btn.textContent = 'SAVING…';
   const { error } = await db.from('contact').update({
     location:   val('ctLoc'),  phone: val('ctPhone'),
+    WatsApp: val('ctWatsApp'),
     email:      val('ctEmail'), linkedin: val('ctLinkedin'),
     education:  val('ctEdu'),
     lang1:      val('ctL1'),   lang1_level: val('ctL1Lv'),
